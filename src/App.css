@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+*{
+    font-family: 'cairo';
+}
+
+@media print {
+  @page {
+    margin: 25px 23px  !important;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+ 
+}
+.ant-form-item-explain-error {
+  position : absolute!important ; 
+  margin-bottom : 20px !important ; 
+  right : 2px !important ;
+  width : max-content !important
+}
+.ant-pagination { 
+  direction: ltr !important;
+}
+.react-flow {
+  overflow-x: auto !important;
+ 
+}
+
+.react-flow__nodes {
+  padding-inline-start: 4px;
+}
+
+::-webkit-scrollbar {
+  width: .6em;
+  height: .8em;
+}
+ 
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px rgba(193, 193, 193, 0.3);
+  border-radius: 20px;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: rgb(186, 186, 186);
+ 
+  border-radius: 20px;
+}
+
+
+:where(.css-dev-only-do-not-override-11akh5d).ant-table-wrapper .ant-table-container::before, :where(.css-dev-only-do-not-override-11akh5d).ant-table-wrapper .ant-table-container::after {
+ 
+  width: 0px !important;
+ 
+}
+

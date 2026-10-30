@@ -35,7 +35,7 @@ const CustomVarSelectFormik = ({
   return (
     <>
       <Form.Item
-        style={{ direction: "rtl", margin: "25px 0px" }}
+        style={{ direction: "rtl" }}
         hasFeedback
         label={label}
         validateTrigger="onBlur"

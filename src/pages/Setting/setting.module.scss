@@ -1,0 +1,206 @@
+$navy: #022865;
+$royal: #0143a0;
+$signal: #0a84ff;
+$slate: #35507a;
+$ice: #f2f7ff;
+$line: rgba(2, 40, 101, 0.1);
+$danger: #e5484d;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+// Section heading with the Signal Blue marker from the brand sheet
+.sectionTitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: $navy;
+
+  &::before {
+    content: "";
+    flex: none;
+    width: 4px;
+    height: 18px;
+    border-radius: 2px;
+    background: $signal;
+  }
+}
+
+.count {
+  padding: 2px 10px;
+  border: 1px solid $line;
+  border-radius: 999px;
+  background: $ice;
+  font-size: 12px;
+  font-weight: 600;
+  color: $slate;
+}
+
+.addBtn {
+  height: 44px !important;
+  padding-inline: 18px !important;
+  border-radius: 14px !important;
+  font-weight: 600;
+  box-shadow: 0 10px 20px -10px rgba($signal, 0.65) !important;
+}
+
+.reveal {
+  animation: reveal 0.28s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---- Table cells ----
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba($signal, 0.25);
+  border-radius: 50%;
+  background: rgba($signal, 0.1);
+  font-size: 14px;
+  font-weight: 700;
+  color: $royal;
+}
+
+.email {
+  font-weight: 600;
+  color: $navy;
+}
+
+.primary {
+  padding: 1px 9px;
+  border: 1px solid $line;
+  border-radius: 999px;
+  background: $ice;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: $slate;
+}
+
+.role {
+  display: inline-block;
+  padding: 3px 12px;
+  border: 1px solid rgba($signal, 0.3);
+  border-radius: 8px;
+  background: rgba($signal, 0.1);
+  font-size: 13px;
+  font-weight: 600;
+  color: $royal;
+}
+
+.perms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.delete {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid $line;
+  border-radius: 10px;
+  background: $ice;
+  font-size: 15px;
+  color: $slate;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba($danger, 0.45);
+    background: rgba($danger, 0.08);
+    color: $danger;
+  }
+  &:focus-visible {
+    outline: 2px solid $signal;
+    outline-offset: 2px;
+  }
+}
+
+// ---- Empty state ----
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  border: 1px dashed rgba(2, 40, 101, 0.2);
+  border-radius: 16px;
+  background: $ice;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 4px;
+  border: 1px solid $line;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 24px;
+  color: $royal;
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: $navy;
+}
+
+.emptyHint {
+  font-size: 13px;
+  color: $slate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .delete {
+    animation: none;
+    transition: none;
+  }
+}

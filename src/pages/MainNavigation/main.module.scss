@@ -1,41 +1,571 @@
-.header {
+// ---------------------------------------------------------------
+// Tokens (Masar palette)
+// ---------------------------------------------------------------
+$navy: #022865;   // Masar Navy  - primary surfaces
+$royal: #0143a0;  // Royal Blue  - gradient start for highlights
+$signal: #0a84ff; // Signal Blue - active state / CTA / focus only
+$deep: #011a45;   // Deep        - end of dark gradients
+$slate: #35507a;  // Slate       - secondary text
+$ice: #f2f7ff;    // Ice         - light backgrounds
+$line: rgba(2, 40, 101, 0.1); // hairline on light surfaces
+$ease: cubic-bezier(0.65, 0, 0.35, 1);
+$dur: 0.4s;
+
+// Corner scale: soft on big panels, tighter on controls
+$r-panel: 24px;
+$r-card: 18px;
+$r-item: 14px;
+
+.shell {
+  --gap: 16px;
+  --sider-w: 240px;
+  --sider-cw: 72px;
+  --header-h: 68px;
+  --offset: calc(var(--sider-w) + var(--gap) * 2);
+
+  background: $ice !important;
+}
+
+.shell[data-collapsed="true"] {
+  --offset: calc(var(--sider-cw) + var(--gap) * 2);
+}
+
+.main {
+  background: transparent !important;
+}
+
+// ---------------------------------------------------------------
+// Floating sidebar
+// ---------------------------------------------------------------
+.sider {
+  position: fixed !important;
+  top: var(--gap);
+  inset-inline-start: var(--gap);
+  height: calc(100dvh - var(--gap) * 2);
+  z-index: 200;
+  padding: 16px 12px;
+  border-radius: $r-panel;
+  background:
+    radial-gradient(120% 40% at 100% 0%, rgba(10, 132, 255, 0.22), transparent 65%),
+    linear-gradient(180deg, $navy 0%, $deep 100%) !important;
+  box-shadow:
+    0 24px 44px -18px rgba(1, 26, 69, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+
+  transition:
+    width $dur $ease,
+    min-width $dur $ease,
+    max-width $dur $ease,
+    flex $dur $ease !important;
+
+  :global(.ant-layout-sider-children) {
     width: 100%;
-    position: fixed !important;
-    padding : 10px;
-    top: 0;
-    z-index: 5555;
-    height: 4rem !important;
-    margin-bottom:0rem !important;
-    background-color: rgba(255, 255, 255);
-    box-shadow: -1px 1px 1px 1px rgb(241, 241, 241);
-    z-index: 100000 !important;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// ---- Brand ----
+.brand {
+  position: relative;
+  flex: none;
+  height: 68px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brandFull,
+.brandMark {
+  position: absolute;
+  top: 0;
+  transition: opacity 0.3s ease;
+}
+
+// chip hugs the logo instead of stretching across the sidebar
+.brandFull {
+  inset-inline-start: 0;
+  max-width: 100%;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $r-item;
+  background: #fff;
+  box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.5);
+
+  img {
+    display: block;
+    height: 28px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+}
+
+.brandMark {
+  inset-inline-start: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $r-item;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, $royal, $signal);
+  box-shadow: 0 8px 18px -8px rgba(10, 132, 255, 0.55);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shell[data-collapsed="true"] {
+  .brandFull {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .brandMark {
+    opacity: 1;
+  }
+}
+
+// ---- Menu ----
+.menuWrap {
+  flex: 1;
+  min-height: 0;
+  padding-top: 6px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.menu {
+  background: transparent !important;
+  border: 0 !important;
+  width: 100% !important; // antd forces a fixed width when collapsed
+
+  :global(.ant-menu-item),
+  :global(.ant-menu-submenu-title) {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding-inline: 14px !important;
+    border-radius: $r-item;
+    font-weight: 500;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-radius $dur $ease,
+      box-shadow 0.25s ease;
+
+    &:focus-visible {
+      outline: 2px solid $signal;
+      outline-offset: 2px;
+    }
+  }
+
+  :global(.ant-menu-item-icon),
+  :global(.anticon) {
+    font-size: 20px;
+  }
+
+  :global(.ant-menu-title-content) {
+    white-space: nowrap;
+    a {
+      color: inherit;
+    }
+  }
+
+  // Section titles: small, quiet, with a hairline so the structure reads clearly
+  :global(.ant-menu-item-group-title) {
     display: flex;
     align-items: center;
-    img {
-        margin-inline-start: auto;   
+    gap: 10px;
+    padding: 0 14px;
+    margin-top: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.42);
+    white-space: nowrap;
+    transition: all $dur $ease;
+
+    &::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
     }
-}
-.sider {
-    height: 100vh;
-    position: fixed !important;
-    top: 4rem;
-    background-color: #fff !important;
-    padding-top: 20px;
-    overflow: auto;
-}
+  }
+  :global(.ant-menu-item-group-list) {
+    padding: 0;
+  }
 
-.menu li  {
-    margin-top: 20px !important;
-    span {
-        font-size: 16px;
+  // Active item: Royal→Signal pill with a soft lit edge, circle when collapsed
+  :global(.ant-menu-item-selected) {
+    background-image: linear-gradient(135deg, $royal, $signal);
+    color: #fff !important;
+    box-shadow:
+      0 10px 20px -8px rgba(10, 132, 255, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  // Parent whose child is active: tint the icon only
+  :global(.ant-menu-submenu-selected) > :global(.ant-menu-submenu-title) {
+    color: #fff;
+    :global(.ant-menu-item-icon) {
+      color: $signal;
     }
-   
-    
-    
+  }
+
+  // Sub-items (Orders children): quieter, with a guide line
+  :global(.ant-menu-sub.ant-menu-inline) {
+    background: transparent !important;
+    margin-inline-start: 22px;
+    padding-inline-start: 8px;
+    border-inline-start: 1px solid rgba(255, 255, 255, 0.1);
+
+    :global(.ant-menu-item) {
+      height: 42px;
+      margin: 4px 0 !important;
+    }
+
+    :global(.ant-menu-item-selected) {
+      background-image: none;
+      background-color: rgba(10, 132, 255, 0.24);
+      box-shadow: none;
+    }
+  }
 }
 
+// Collapsed: 48px circles, section titles become thin dividers
+.menu:global(.ant-menu-inline-collapsed) {
+  :global(.ant-menu-item),
+  :global(.ant-menu-submenu-title) {
+    border-radius: 24px;
+  }
 
+  :global(.ant-menu-item-group-title) {
+    display: block !important;
+    opacity: 1 !important;
+    height: 1px;
+    padding: 0;
+    margin: 14px 10px 8px;
+    font-size: 0;
+    background: rgba(255, 255, 255, 0.12);
 
+    &::after {
+      display: none;
+    }
+  }
+}
 
+// Popup for "Orders" when collapsed
+.popup {
+  :global(.ant-menu) {
+    padding: 8px;
+    border-radius: 16px;
+    background: $navy !important;
+    box-shadow: 0 18px 36px -12px rgba(1, 26, 69, 0.6);
+  }
 
+  :global(.ant-menu-item) {
+    border-radius: 10px;
+    margin: 4px 0 !important;
+    a {
+      color: inherit;
+    }
+  }
 
+  :global(.ant-menu-item-selected) {
+    background-color: rgba(10, 132, 255, 0.3) !important;
+    color: #fff !important;
+  }
+}
+
+// ---- Footer (logout) ----
+.footer {
+  flex: none;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logout {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: $r-item;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.62);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-radius $dur $ease;
+
+  svg {
+    flex: none;
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $signal;
+    outline-offset: 2px;
+  }
+}
+
+.logoutLabel {
+  transition: opacity 0.3s ease;
+}
+
+.shell[data-collapsed="true"] {
+  .logout {
+    border-radius: 24px;
+  }
+  .logoutLabel {
+    opacity: 0;
+  }
+}
+
+// ---------------------------------------------------------------
+// Floating header: light glass, hairline border
+// ---------------------------------------------------------------
+.header {
+  position: fixed !important;
+  top: var(--gap);
+  inset-inline-start: var(--offset);
+  inset-inline-end: var(--gap);
+  width: auto !important;
+  height: var(--header-h) !important;
+  line-height: 1 !important;
+  padding-block: 0 !important;
+  padding-inline: 12px 14px !important;
+  z-index: 150 !important;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.86) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid $line;
+  box-shadow: 0 14px 30px -20px rgba(2, 40, 101, 0.4);
+  transition: inset-inline-start $dur $ease;
+}
+
+.toggle {
+  flex: none;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: $r-item !important;
+  font-size: 18px !important;
+  color: $navy !important;
+  background: $ice !important;
+
+  &:hover {
+    background: rgba(2, 40, 101, 0.08) !important;
+  }
+  &:focus-visible {
+    outline: 2px solid $signal;
+  }
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-inline-start: 14px;
+  border-inline-start: 1px solid $line;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: $navy;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subtitle {
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: $slate;
+}
+
+.actions {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cta {
+  height: 44px !important;
+  padding-inline: 18px !important;
+  border-radius: $r-item !important;
+  font-weight: 600;
+  box-shadow: 0 10px 20px -10px rgba(10, 132, 255, 0.65) !important;
+}
+
+.vr {
+  width: 1px;
+  height: 28px;
+  background: $line;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px 4px 12px;
+  border: 0;
+  border-radius: $r-item;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: $ice;
+  }
+  &:focus-visible {
+    outline: 2px solid $signal;
+  }
+}
+
+.avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, $royal, $signal);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px $line;
+}
+
+.userText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  line-height: 1.2;
+  text-align: start;
+
+  b {
+    font-size: 14px;
+    font-weight: 600;
+    color: $navy;
+  }
+  small {
+    font-size: 12px;
+    color: $slate;
+  }
+}
+
+.caret {
+  font-size: 11px;
+  color: $slate;
+}
+
+.dropdown {
+  :global(.ant-dropdown-menu) {
+    min-width: 190px;
+    padding: 8px;
+    border-radius: 16px;
+    box-shadow: 0 18px 36px -14px rgba(2, 40, 101, 0.35);
+  }
+  :global(.ant-dropdown-menu-item) {
+    border-radius: 10px;
+    padding: 10px 12px;
+    a {
+      color: inherit;
+    }
+  }
+}
+
+// ---------------------------------------------------------------
+// Content
+// ---------------------------------------------------------------
+.content {
+  margin-top: calc(var(--gap) * 2 + var(--header-h)) !important;
+  margin-bottom: var(--gap) !important;
+  margin-inline-end: var(--gap) !important;
+  margin-inline-start: var(--offset) !important;
+  transition: margin-inline-start $dur $ease;
+}
+
+.page {
+  min-height: calc(100dvh - var(--gap) * 4 - var(--header-h));
+  padding: 24px;
+  border-radius: $r-card;
+  background: #fff;
+  border: 1px solid $line;
+  box-shadow: 0 10px 28px -20px rgba(2, 40, 101, 0.25);
+}
+
+// ---------------------------------------------------------------
+// Small screens (sidebar auto-collapses via the Sider breakpoint)
+// ---------------------------------------------------------------
+@media (max-width: 767px) {
+  .subtitle,
+  .userText,
+  .caret,
+  .ctaText,
+  .vr {
+    display: none;
+  }
+  .user {
+    padding: 4px;
+  }
+}
+
+@media (max-width: 575px) {
+  .shell {
+    --gap: 10px;
+  }
+  .page {
+    padding: 16px;
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sider,
+  .header,
+  .content,
+  .brandFull,
+  .brandMark,
+  .logoutLabel,
+  .menu :global(.ant-menu-item) {
+    transition: none !important;
+  }
+}

@@ -1,21 +1,107 @@
+$navy: #022865;
+$slate: #35507a;
+$ice: #f2f7ff;
+$line: rgba(2, 40, 101, 0.1);
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 1199px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-width: 575px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// --tone is set per card from the `color` prop
+.card {
+  --tone: #0a84ff;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 148px;
+  padding: 18px 20px;
+  border: 1px solid $line;
+  border-radius: 16px;
+  background: $ice;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--tone) 45%, transparent);
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: $slate;
+}
+
 .icon {
-    position : absolute ; 
-    top: -10px;
-    background-color: rgb(255, 255, 255);
-    border-radius: 50%;
-    border: 4px solid #F5F5F5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    left: 50%;   
-    transform: translateX(-50%);
-    width: 3.5rem;
-    height: 3.5rem;
-   
-   
-    svg {
-        width: 2.5rem;
-        height: 2.5rem;
-        padding: 3px;
-    }
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 20px;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 14%, #fff);
+}
+
+.value {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: $navy;
+}
+
+.share {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.track {
+  flex: 1;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(2, 40, 101, 0.1);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--tone);
+  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.pct {
+  flex: none;
+  font-size: 12px;
+  color: $slate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .fill {
+    transition: none;
+  }
 }

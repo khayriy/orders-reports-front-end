@@ -1,43 +1,46 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Badge } from "antd";
+import type { CSSProperties } from "react";
+import styles from "./permissionTableView.module.scss";
 
-const PermissionTableView = ({ Icon, bgColor, color, data , title }: any) => {
-  
-  
-    return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "3px",
-      }}
-    >
-      <Badge
-        style={{
-          backgroundColor: bgColor,
-          fontSize: "20px",
-          padding: "3px 20px",
-          borderRadius: "20px",
-        }}
-        count={
-          <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-            <Icon style={{ color: color }} />
-            <span style={{ fontSize: "11px", color: color }}>{title}</span>
-          </div>
-        }
-      ></Badge>
-      {data && data.length > 0 ? (
-        <div style={{display:'flex'}}>
-         {data.map((e: any, index: number) => {
-         return <Badge style={{fontSize :'10px', color : 'black' , backgroundColor : 'rgba(250 , 250 ,250)' }} key={index} count={e} />;
-        })}
-        </div>
-       
-      ) : (
-        <Badge style={{fontSize :'10px', color : 'black' , backgroundColor : 'rgba(250 , 250 ,250)' }} count="------" />
-      )}
+// raw permission keys -> what the admin should read
+const RESOURCE_LABELS: Record<string, string> = {
+  ship: "الشحن",
+  order: "الطلبات",
+  product: "المنتجات",
+  dash: "الرئيسية",
+};
+
+interface Props {
+  title: string;
+  data?: string[];
+  /** accent for the group (icon + chip tint) */
+  color: string;
+  Icon?: any;
+  /** kept for backwards compatibility, no longer used */
+  bgColor?: string;
+}
+
+const PermissionTableView = ({ Icon, color, data, title }: Props) => {
+  const list = data ?? [];
+
+  return (
+    <div className={styles.group} style={{ "--tone": color } as CSSProperties}>
+      <span className={styles.title}>
+        {Icon ? <Icon className={styles.icon} /> : <span className={styles.dot} />}
+        {title}
+      </span>
+
+      <div className={styles.items}>
+        {list.length > 0 ? (
+          list.map((key, index) => (
+            <span className={styles.chip} key={`${key}-${index}`}>
+              {RESOURCE_LABELS[key] ?? key}
+            </span>
+          ))
+        ) : (
+          <span className={styles.none}>—</span>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,42 +1,68 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Segmented } from "antd";
-
-import MainContainer from "../../Containers/MainContainer/MainContainer";
-
 import { useState } from "react";
-import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, BarsOutlined, CheckOutlined } from "@ant-design/icons";
 import AddProductWithType from "../AddProductWithType/AddProductWithType";
 import AddProductWithName from "../AddProductWithName/AddProductWithName";
+import styles from "./addNewProduct.module.scss";
+
+type Kind = "without" | "with";
+
+const OPTIONS = [
+  {
+    value: "without" as Kind,
+    title: "منتج بسيط",
+    hint: "لا يحتوي على أنواع داخلية",
+    Icon: BarsOutlined,
+  },
+  {
+    value: "with" as Kind,
+    title: "منتج بأنواع",
+    hint: "يحتوي على أنواع داخلية، ولكل نوع كمية",
+    Icon: AppstoreOutlined,
+  },
+];
 
 const AddNewProduct = () => {
-  const [isHaveType, setIsHaveType] = useState(false);
- 
+  const [kind, setKind] = useState<Kind>("without");
+
   return (
-    <>
-      <MainContainer title="اضافة منتج جديد">
-       
-        <Segmented
-          style={{ marginBottom: "20px" }}
-          onChange={(value) => {
-            if (value === "without") setIsHaveType(false);
-            if (value === "with") setIsHaveType(true);
-          }}
-          options={[
-            {
-              label: "منتج لا يحتوي علي أنواع داخلية",
-              value: "without",
-              icon: <BarsOutlined />,
-            },
-            {
-              label: "منتج يحتوي علي انواع داخلية",
-              value: "with",
-              icon: <AppstoreOutlined />,
-            },
-          ]}
-        />
-        {!isHaveType ? <AddProductWithName /> : <AddProductWithType />}
-      </MainContainer>
-    </>
+    <section className={styles.panel}>
+      <header className={styles.head}>
+        <h2 className={styles.title}>إضافة منتج جديد</h2>
+        <span className={styles.hint}>اختر نوع المنتج أولًا، ثم أكمل بياناته</span>
+      </header>
+
+      <div className={styles.kinds} role="radiogroup" aria-label="نوع المنتج">
+        {OPTIONS.map(({ value, title, hint, Icon }) => {
+          const selected = kind === value;
+          return (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              className={styles.kind}
+              data-selected={selected}
+              onClick={() => setKind(value)}
+            >
+              <span className={styles.kindIcon}>
+                <Icon />
+              </span>
+              <span className={styles.kindText}>
+                <b>{title}</b>
+                <small>{hint}</small>
+              </span>
+              <span className={styles.radio} aria-hidden>
+                {selected && <CheckOutlined />}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className={styles.form}>
+        {kind === "without" ? <AddProductWithName /> : <AddProductWithType />}
+      </div>
+    </section>
   );
 };
 

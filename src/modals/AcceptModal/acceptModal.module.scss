@@ -1,0 +1,227 @@
+$navy: #022865;
+$royal: #0143a0;
+$signal: #0a84ff;
+$slate: #35507a;
+$ice: #f2f7ff;
+$line: rgba(2, 40, 101, 0.1);
+$danger: #e5484d;
+
+// antd renders the modal in a portal, so the shell is styled through wrapClassName
+.modal {
+  :global(.ant-modal) {
+    max-width: calc(100vw - 32px);
+  }
+
+  :global(.ant-modal-content) {
+    padding: 0;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px -20px rgba(1, 26, 69, 0.45);
+  }
+
+  :global(.ant-modal-header) {
+    margin: 0;
+    padding: 18px 24px;
+    border-bottom: 1px solid $line;
+    background: #fff;
+  }
+
+  :global(.ant-modal-body) {
+    max-height: calc(100dvh - 240px);
+    padding: 20px 24px;
+    overflow-y: auto;
+    background: $ice;
+  }
+
+  :global(.ant-modal-footer) {
+    margin: 0;
+    padding: 14px 24px;
+    border-top: 1px solid $line;
+    background: #fff;
+  }
+
+  :global(.ant-modal-close) {
+    border-radius: 10px;
+  }
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    color: $navy;
+
+    &::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      border-radius: 2px;
+      background: $signal;
+    }
+  }
+
+  small {
+    padding-inline-start: 14px;
+    font-size: 13px;
+    font-weight: 400;
+    color: $slate;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  :global(.ant-form-item-label > label) {
+    font-weight: 600;
+    color: $navy;
+  }
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid rgba($signal, 0.3);
+  border-radius: 12px;
+  background: rgba($signal, 0.08);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: $navy;
+
+  :global(.anticon) {
+    flex: none;
+    margin-top: 4px;
+    color: $royal;
+  }
+}
+
+.card {
+  padding: 18px 20px;
+  border: 1px solid $line;
+  border-radius: 16px;
+  background: #fff;
+  transition: border-color 0.2s ease;
+
+  &[data-invalid="true"] {
+    border-color: rgba($danger, 0.5);
+  }
+}
+
+.cardHead {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $line;
+}
+
+.cardTitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: $navy;
+}
+
+.count {
+  padding: 2px 10px;
+  border: 1px solid $line;
+  border-radius: 999px;
+  background: $ice;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: $slate;
+}
+
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scroll-margin-top: 80px;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  column-gap: 16px;
+}
+
+.error {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: $danger;
+}
+
+// ---- footer ----
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.summary {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  color: $slate;
+
+  b {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: $navy;
+  }
+
+  &[data-state="error"] {
+    font-weight: 600;
+    color: $danger;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cancel,
+.confirm {
+  height: 44px !important;
+  padding-inline: 20px !important;
+  border-radius: 14px !important;
+  font-weight: 600;
+}
+
+.confirm {
+  box-shadow: 0 10px 20px -10px rgba($signal, 0.65) !important;
+}
+
+@media (max-width: 575px) {
+  .actions {
+    width: 100%;
+
+    > * {
+      flex: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

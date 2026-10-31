@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Form, InputNumber, Modal } from "antd";
+import { useRef, useState } from "react";
+import { Button, Form, Input, InputNumber, Modal } from "antd";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { DollarOutlined, ExclamationCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 import ProductInput from "../../components/ProductInput/ProductInput";
-import { AiOutlinePhone } from "react-icons/ai";
-import { DollarOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import TextArea from "antd/lib/input/TextArea";
+import styles from "./acceptModal.module.scss";
+
 interface AcceptModalInterface {
   products: any;
   isModalOpen: boolean;
@@ -13,11 +14,12 @@ interface AcceptModalInterface {
   deleteProduct: any;
   setProducts: any;
   formattedProducts: any;
-  price : any , 
-  setPrice : any , 
-  details : any , 
-  setDetails : any
+  price: any;
+  setPrice: any;
+  details: any;
+  setDetails: any;
 }
+
 const AcceptModal = ({
   formattedProducts,
   products,
@@ -26,91 +28,159 @@ const AcceptModal = ({
   isModalOpen,
   handleCancel,
   handleOk,
-  price  , 
-  setPrice , 
-  details , 
-  setDetails 
+  price,
+  setPrice,
+  details,
+  setDetails,
 }: AcceptModalInterface) => {
-  
-  const [error, setError] = useState("");
-  const reg = /^[0-9]*$/;
-  const changeQuantity = (e: any) => {
-    if (!reg.test(e)) {
-      setError("لابد من ادخال ارقام فقط");
-      return;
-    } else {
-      setError("");
-      setPrice(e);
-    }
+  const [attempted, setAttempted] = useState(false);
+  const priceRef = useRef<any>(null);
+  const productsRef = useRef<HTMLDivElement>(null);
+
+  const acceptedCount = products.filter((p: any) => p.value?.[0]).length;
+  const hasProducts = acceptedCount > 0;
+  const hasPrice = price !== "" && price !== null && price !== undefined;
+
+  const missing = [!hasProducts && "المنتجات", !hasPrice && "السعر الجديد"].filter(Boolean) as string[];
+
+  const close = () => {
+    setAttempted(false);
+    handleCancel();
   };
+
+  // always clickable: if something is missing it says what and moves there
+  const confirm = () => {
+    setAttempted(true);
+    if (!hasProducts) {
+      productsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    if (!hasPrice) {
+      priceRef.current?.focus?.();
+      return;
+    }
+    handleOk();
+  };
+
   return (
-    <>
-      <Modal
-        title="تسليم جزئي"
-        open={isModalOpen}
-        width={1000}
-        onOk={handleOk}
-        footer={[
-          <div style={{ marginTop: "40px" }}>
-            <Button onClick={handleCancel}> غلق </Button>,
-            <Button type="primary" onClick={handleOk}>
+    <Modal
+      open={isModalOpen}
+      centered
+      width={880}
+      wrapClassName={styles.modal}
+      onCancel={close}
+      title={
+        <div className={styles.title}>
+          <span>تسليم جزئي</span>
+          <small>حدد ما تم تسليمه فعليًا للعميل</small>
+        </div>
+      }
+      footer={
+        <div className={styles.footer}>
+          <p className={styles.summary} data-state={attempted && missing.length ? "error" : "ok"} aria-live="polite">
+            {attempted && missing.length > 0 ? (
+              <>
+                <ExclamationCircleFilled /> يرجى مراجعة: {missing.join("، ")}
+              </>
+            ) : (
+              <>
+                <b>{acceptedCount}</b> منتج مسلّم
+                {hasPrice && (
+                  <>
+                    {" · "}السعر الجديد <b>{Number(price).toLocaleString("en-US")}</b>
+                  </>
+                )}
+              </>
+            )}
+          </p>
+          <div className={styles.actions}>
+            <Button className={styles.cancel} onClick={close}>
+              غلق
+            </Button>
+            <Button type="primary" className={styles.confirm} onClick={confirm}>
               تاكيد الاستلام الجزئي
             </Button>
-          </div>,
-        ]}
-      >
-        <Form layout="vertical">
-          {products.map((e: any, index: number) => {
-            return (
+          </div>
+        </div>
+      }
+    >
+      <Form layout="vertical" className={styles.form} onSubmitCapture={(e) => e.preventDefault()}>
+        <div className={styles.notice} role="note">
+          <InfoCircleOutlined />
+          <span>
+            أبقِ المنتجات التي تم تسليمها فقط وعدّل كمياتها، واحذف ما لم يتم تسليمه. ثم أدخل السعر الجديد بعد التسليم.
+          </span>
+        </div>
+
+        <section className={styles.card} data-invalid={attempted && !hasProducts}>
+          <header className={styles.cardHead}>
+            <h3 className={styles.cardTitle}>
+              المنتجات المسلمة
+              <span className={styles.count}>{acceptedCount}</span>
+            </h3>
+          </header>
+
+          <div ref={productsRef} className={styles.products}>
+            {products.map((e: any, index: number) => (
               <ProductInput
                 isProductDisable={true}
                 options={formattedProducts}
                 label="الاسم الفرعي"
                 placeholder="اكتب اسم النوع الداخلي"
-                Icon={<AiOutlinePhone />}
+                Icon={<AiOutlineShoppingCart />}
                 setProducts={setProducts}
                 product={e}
                 id={e.id}
                 isFirst={index === 0 && products.length === 1}
-                key={index}
+                key={e.id}
                 products={products}
                 deleteProductInput={deleteProduct}
               />
-            );
-          })}
+            ))}
+          </div>
 
-          <Form.Item
-            style={{ direction: "rtl", margin: "8px 0px" }}
-            hasFeedback
-            label="السعر الجديد"
-            validateStatus={error ? "error" : ""}
-            help={error}
-            tooltip={"مطلوب"}
-          >
-            <InputNumber
-              style={{ width: "100%" }}
-              placeholder={"ادحال السعر الجديد بعد التسليم"}
-              prefix={<DollarOutlined />}
-              size="large"
-              onChange={(e) => changeQuantity(e)}
-              value={price}
-            />
-          </Form.Item>
-          <Form.Item
-            style={{ direction: "rtl", width: "100%" }}
-            label={"ملاحظات التسليم الجزئي"}
-          >
-            <TextArea
-              size="large"
-              rows={2}
-              placeholder={"بعض ملاحظات التسليم الجزئي"}
-              value={details} 
-              onChange={(e)=> setDetails(e.target.value)}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
+          {attempted && !hasProducts && <p className={styles.error}>اترك منتجًا واحدًا على الأقل ضمن المنتجات المسلمة.</p>}
+        </section>
+
+        <section className={styles.card}>
+          <header className={styles.cardHead}>
+            <h3 className={styles.cardTitle}>بيانات التسليم</h3>
+          </header>
+
+          <div className={styles.fields}>
+            <Form.Item
+              label="السعر الجديد"
+              required
+              validateStatus={attempted && !hasPrice ? "error" : undefined}
+              help={attempted && !hasPrice ? "أدخل السعر الجديد بعد التسليم" : undefined}
+            >
+              <InputNumber
+                ref={priceRef}
+                style={{ width: "100%" }}
+                size="large"
+                min={0}
+                precision={0}
+                placeholder="ادخل السعر الجديد بعد التسليم"
+                prefix={<DollarOutlined />}
+                value={price === "" ? null : price}
+                onChange={(value) => setPrice(value ?? "")}
+              />
+            </Form.Item>
+
+            <Form.Item label="ملاحظات التسليم الجزئي (اختياري)">
+              <Input.TextArea
+                size="large"
+                rows={2}
+                placeholder="بعض ملاحظات التسليم الجزئي"
+                value={details}
+                onChange={(e) => setDetails(e.target.value)}
+              />
+            </Form.Item>
+          </div>
+        </section>
+      </Form>
+    </Modal>
   );
 };
+
 export default AcceptModal;

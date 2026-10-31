@@ -1,0 +1,253 @@
+$navy: #022865;
+$royal: #0143a0;
+$signal: #0a84ff;
+$slate: #35507a;
+$ice: #f2f7ff;
+$line: rgba(2, 40, 101, 0.1);
+$danger: #e5484d;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// cards are white so the form reads the same on an Ice panel or inside a table row
+.card {
+  padding: 18px 20px;
+  border: 1px solid $line;
+  border-radius: 16px;
+  background: #fff;
+
+  :global(.ant-form-item-label > label) {
+    font-weight: 600;
+    color: $navy;
+  }
+}
+
+// the one thing that is always editable gets a Signal outline
+.statusCard {
+  border-color: rgba($signal, 0.45);
+  box-shadow: 0 0 0 3px rgba($signal, 0.08);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $line;
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: $navy;
+
+  &::before {
+    content: "";
+    width: 4px;
+    height: 16px;
+    border-radius: 2px;
+    background: $signal;
+  }
+}
+
+.cardHint {
+  padding-inline-start: 14px;
+  font-size: 13px;
+  color: $slate;
+
+  b {
+    font-weight: 700;
+    color: $navy;
+  }
+}
+
+.lockChip {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid $line;
+  border-radius: 999px;
+  background: $ice;
+  font-size: 12px;
+  font-weight: 600;
+  color: $slate;
+}
+
+// explains why fields are not editable
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid rgba($signal, 0.3);
+  border-radius: 12px;
+  background: rgba($signal, 0.08);
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: $navy;
+
+  :global(.anticon) {
+    flex: none;
+    color: $royal;
+  }
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  column-gap: 16px;
+}
+
+.field {
+  min-width: 0;
+  scroll-margin-top: 120px;
+  border-radius: 12px;
+}
+
+.span2 {
+  grid-column: 1 / -1;
+}
+
+.flash {
+  animation: flash 1.4s ease;
+}
+
+@keyframes flash {
+  0% {
+    box-shadow: 0 0 0 0 rgba($signal, 0);
+  }
+  20% {
+    box-shadow: 0 0 0 6px rgba($signal, 0.28);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($signal, 0);
+  }
+}
+
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scroll-margin-top: 120px;
+}
+
+.add {
+  height: 44px;
+  margin-top: 8px;
+  border-radius: 14px;
+  border-color: rgba($signal, 0.45);
+  font-weight: 600;
+  color: $royal;
+
+  &:hover {
+    border-color: $signal !important;
+    color: $signal !important;
+  }
+}
+
+// ---- validation summary ----
+.problems {
+  padding: 14px 16px;
+  border: 1px solid rgba($danger, 0.35);
+  border-radius: 12px;
+  background: rgba($danger, 0.05);
+
+  ul {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  button {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba($danger, 0.08);
+    }
+    &:focus-visible {
+      outline: 2px solid $signal;
+    }
+
+    b {
+      font-size: 13.5px;
+      color: $navy;
+    }
+    span {
+      font-size: 12.5px;
+      color: $danger;
+    }
+  }
+}
+
+.problemsHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: $danger;
+}
+
+// ---- action bar ----
+.actionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding-top: 4px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: $slate;
+}
+
+.submit {
+  height: 46px !important;
+  padding-inline: 24px !important;
+  border-radius: 14px !important;
+  font-weight: 600;
+  box-shadow: 0 10px 20px -10px rgba($signal, 0.65) !important;
+
+  @media (max-width: 575px) {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash {
+    animation: none;
+  }
+}
